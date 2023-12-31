@@ -4,6 +4,7 @@ go 1.21.5
 
 require (
 	github.com/m-mizutani/clog v0.0.4
+	github.com/rs/xid v1.5.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/crypto v0.17.0
 )
