@@ -4,11 +4,20 @@ updates:
     directory: "backend/"
     schedule:
       interval: "daily"
+    labels:
+      - ":computer: backend"
+      - ":arrow_up: dependency"
   - package-ecosystem: "npm"
     directory: "frontend/"
     schedule:
       interval: "daily"
+    labels:
+      - ":spider_web:  frontend"
+      - ":arrow_up: dependency"
   - package-ecosystem: docker
     directory: "frontend/"
     schedule:
       interval: "daily"
+    labels:
+      - ":whale: docker"
+      - ":arrow_up: dependency"
