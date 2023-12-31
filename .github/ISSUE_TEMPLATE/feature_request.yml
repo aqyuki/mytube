@@ -1,6 +1,6 @@
-name: ":sparkles: Feature Request"
+name: "✨ Feature Request"
 description: "Feature request for the project"
-title: ":sparkles: feature :  "
+title: "✨"
 labels: [":sparkles: feat"]
 
 body:
