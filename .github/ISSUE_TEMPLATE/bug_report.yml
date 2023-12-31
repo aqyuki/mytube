@@ -1,7 +1,7 @@
-name: ":bug: Bug Report"
+name: "🐛 Bug Report"
 description: "Bug report for the project"
-title: ":bug: bug :  "
-labels: [":bug: Bug"]
+title: "🐛"
+labels: [":bug: bug"]
 
 body:
   - type: textarea
