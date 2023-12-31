@@ -14,7 +14,7 @@ type MockAccountRepository struct {
 	ErrMode bool
 }
 
-func (m *MockAccountRepository) FetchByUserName(ctx context.Context, userName string) (*Account, error) {
+func (m *MockAccountRepository) FetchByUsername(ctx context.Context, userName string) (*Account, error) {
 	if m.ErrMode {
 		return nil, errors.New("error mode")
 	}
@@ -36,7 +36,7 @@ func (m *MockAccountRepository) Register(ctx context.Context, account *Account) 
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	m.m[account.UserName] = *account
+	m.m[account.Username] = *account
 	return nil
 }
 
@@ -48,7 +48,7 @@ func (m *MockAccountRepository) Update(ctx context.Context, account *Account) er
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	m.m[account.UserName] = *account
+	m.m[account.Username] = *account
 	return nil
 }
 
@@ -60,7 +60,7 @@ func (m *MockAccountRepository) Delete(ctx context.Context, account *Account) er
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	delete(m.m, account.UserName)
+	delete(m.m, account.Username)
 	return nil
 }
 

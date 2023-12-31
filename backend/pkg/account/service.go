@@ -60,7 +60,7 @@ func (s *AccountService) Delete(ctx context.Context, username string) error {
 	ctx, cancel := context.WithDeadline(ctx, time.Now().Add(10*time.Second))
 	defer cancel()
 
-	user, err := s.repo.FetchByUserName(ctx, username)
+	user, err := s.repo.FetchByUsername(ctx, username)
 	if err != nil {
 		logger.Error("failed to fetch account", slog.Any("error", err))
 		return err
@@ -81,7 +81,7 @@ func (s *AccountService) Login(ctx context.Context, username, password string) (
 	ctx, cancel := context.WithDeadline(ctx, time.Now().Add(10*time.Second))
 	defer cancel()
 
-	user, err := s.repo.FetchByUserName(ctx, username)
+	user, err := s.repo.FetchByUsername(ctx, username)
 	if err != nil {
 		logger.Error("failed to fetch account", slog.Any("error", err))
 		return nil, err

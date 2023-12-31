@@ -6,7 +6,7 @@ import (
 
 type Account struct {
 	ID           string
-	UserName     string
+	Username     string
 	PasswordHash string // PasswordHash is the hash of the password
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
@@ -17,9 +17,9 @@ func (a *Account) EqualPassword(password string) bool {
 	return comparePassword(a.PasswordHash, password) == nil
 }
 
-// UpdateUserName updates the user name
-func (a *Account) UpdateUserName(userName string) {
-	a.UserName = userName
+// UpdateUsername updates the user name
+func (a *Account) UpdateUsername(userName string) {
+	a.Username = userName
 	a.UpdatedAt = time.Now()
 }
 
@@ -43,7 +43,7 @@ func NewAccount(id, user, password string, createdAt, updatedAt time.Time) (*Acc
 
 	return &Account{
 		ID:           id,
-		UserName:     user,
+		Username:     user,
 		PasswordHash: hashedPassword,
 		CreatedAt:    createdAt,
 		UpdatedAt:    updatedAt,

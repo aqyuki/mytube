@@ -22,7 +22,7 @@ func TestService_Register(t *testing.T) {
 		user, err := service.Register(ctx, "test", "test")
 		assert.NoError(t, err, "should not return error")
 		if assert.NotNil(t, user, "should return user") {
-			assert.Equal(t, "test", user.UserName, "should return correct username")
+			assert.Equal(t, "test", user.Username, "should return correct username")
 			user.EqualPassword("test")
 		} else {
 			t.Fatal("should return user")
@@ -59,7 +59,7 @@ func TestService_Delete(t *testing.T) {
 		user, err := service.Register(ctx, "test", "test")
 		assert.NoError(t, err, "should not return error")
 
-		err = service.Delete(ctx, user.UserName)
+		err = service.Delete(ctx, user.Username)
 		assert.NoError(t, err, "should not return error")
 	})
 
@@ -76,7 +76,7 @@ func TestService_Delete(t *testing.T) {
 		assert.NoError(t, err, "should not return error")
 
 		repo.ErrMode = true
-		err = service.Delete(ctx, user.UserName)
+		err = service.Delete(ctx, user.Username)
 		assert.Error(t, err, "should return error")
 	})
 }
@@ -96,7 +96,7 @@ func TestService_Login(t *testing.T) {
 		user, err := service.Register(ctx, "test", "test")
 		assert.NoError(t, err, "should not return error")
 		if assert.NotNil(t, user, "should return user") {
-			assert.Equal(t, "test", user.UserName, "should return correct username")
+			assert.Equal(t, "test", user.Username, "should return correct username")
 			user.EqualPassword("test")
 		} else {
 			t.Fatal("should return user")
@@ -104,7 +104,7 @@ func TestService_Login(t *testing.T) {
 		user, err = service.Login(ctx, "test", "test")
 		assert.NoError(t, err, "should not return error")
 		if assert.NotNil(t, user, "should return user") {
-			assert.Equal(t, "test", user.UserName, "should return correct username")
+			assert.Equal(t, "test", user.Username, "should return correct username")
 			user.EqualPassword("test")
 		} else {
 			t.Fatal("should return user")
@@ -123,7 +123,7 @@ func TestService_Login(t *testing.T) {
 		user, err := service.Register(ctx, "test", "test")
 		assert.NoError(t, err, "should not return error")
 		if assert.NotNil(t, user, "should return user") {
-			assert.Equal(t, "test", user.UserName, "should return correct username")
+			assert.Equal(t, "test", user.Username, "should return correct username")
 			user.EqualPassword("test")
 		} else {
 			t.Fatal("should return user")
