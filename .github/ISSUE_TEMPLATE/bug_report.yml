@@ -1,0 +1,14 @@
+name: ":bug: Bug Report"
+description: "Bug report for the project"
+title: ":bug: bug :  "
+labels: [":bug: Bug"]
+
+body:
+  - type: textarea
+    id: feature
+    attributes:
+      label: "機能について"
+      description: "機能の詳細"
+      placeholder: "機能の詳細を記入してください"
+    validations:
+      required: true
