@@ -60,3 +60,8 @@ func (r *AccountRepository) Delete(ctx context.Context, account *Account) error 
 	}
 	return nil
 }
+
+// Close closes connection to the database
+func (r *AccountRepository) Close() error {
+	return r.db.Close()
+}
