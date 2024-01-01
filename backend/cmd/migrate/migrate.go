@@ -12,10 +12,10 @@ import (
 
 	"github.com/aqyuki/mytube/backend/pkg/database"
 	"github.com/aqyuki/mytube/backend/pkg/logging"
+	"github.com/aqyuki/mytube/backend/pkg/setup"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/sethvargo/go-envconfig"
 )
 
 var (
@@ -46,8 +46,8 @@ func realMain(ctx context.Context) error {
 	logger := logging.FromContext(ctx)
 
 	var config database.Config
-	if err := envconfig.Process(ctx, &config); err != nil {
-		return err
+	if err := setup.Setup(ctx, &config); err != nil {
+		return fmt.Errorf("failed database setup: %w", err)
 	}
 
 	dir := fmt.Sprintf("file://%s", *pathFlag)
