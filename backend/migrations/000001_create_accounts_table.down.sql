@@ -1,0 +1,1 @@
+DROP TABLE accounts IF EXISTS;
