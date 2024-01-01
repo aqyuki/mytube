@@ -22,10 +22,10 @@ type Service interface {
 
 // AccountService is the implementation of the Service interface.
 type AccountService struct {
-	repo AccountRepository
+	repo Repository
 }
 
-func NewAccountService(repo AccountRepository) *AccountService {
+func NewAccountService(repo Repository) *AccountService {
 	return &AccountService{repo: repo}
 }
 

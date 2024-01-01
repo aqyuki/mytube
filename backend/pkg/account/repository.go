@@ -2,7 +2,7 @@ package account
 
 import "context"
 
-type AccountRepository interface {
+type Repository interface {
 	// FetchByUsername fetches an account by its username
 	FetchByUsername(ctx context.Context, userName string) (*Account, error)
 	// Register registers a new account to the repository
