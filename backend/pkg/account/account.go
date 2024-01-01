@@ -2,14 +2,17 @@ package account
 
 import (
 	"time"
+
+	"github.com/uptrace/bun"
 )
 
 type Account struct {
-	ID           string
-	Username     string
-	PasswordHash string // PasswordHash is the hash of the password
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	bun.BaseModel `bun:"table:accounts"`
+	ID            string    `bun:"id,pk"`
+	Username      string    `bun:"username,notnull,unique"`
+	PasswordHash  string    `bun:"password_hash,notnull"` // PasswordHash is the hash of the password
+	CreatedAt     time.Time `bun:"created_at"`
+	UpdatedAt     time.Time `bun:"updated_at"`
 }
 
 // EqualPassword compares the password with the hash

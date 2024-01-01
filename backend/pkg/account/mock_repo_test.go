@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-var _ AccountRepository = (*MockAccountRepository)(nil)
+var _ Repository = (*MockAccountRepository)(nil)
 
 type MockAccountRepository struct {
 	m       map[string]Account
