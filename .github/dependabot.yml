@@ -28,3 +28,10 @@ updates:
     labels:
       - ":whale: docker"
       - ":arrow_up: dependency"
+  - package-ecosystem: docker
+    directory: "docker/postgres/"
+    schedule:
+      interval: "daily"
+    labels:
+      - ":whale: docker"
+      - ":arrow_up: dependency"
