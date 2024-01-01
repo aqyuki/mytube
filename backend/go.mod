@@ -4,7 +4,7 @@ go 1.21.5
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.17.0
-	github.com/gorilla/sessions v1.2.0
+	github.com/gorilla/sessions v1.2.2
 	github.com/jackc/pgx/v5 v5.5.1
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/m-mizutani/clog v0.0.4
@@ -24,7 +24,7 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/google/uuid v1.4.0 // indirect
-	github.com/gorilla/securecookie v1.1.1 // indirect
+	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
