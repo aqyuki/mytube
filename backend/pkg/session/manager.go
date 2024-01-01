@@ -2,12 +2,17 @@ package session
 
 import (
 	"errors"
+	"time"
 
+	"github.com/gorilla/sessions"
 	"github.com/labstack/echo/v4"
 	"github.com/rbcervilla/redisstore/v9"
 )
 
-const sessionKey = "mt-session"
+const (
+	sessionKey       = "mt-session"
+	sessionKeyPrefix = "mt-session:"
+)
 
 type Manager struct {
 	store *redisstore.RedisStore
@@ -46,6 +51,12 @@ func (m *Manager) DeleteContent(c echo.Context) error {
 }
 
 func NewManager(store *redisstore.RedisStore) *Manager {
+	store.KeyPrefix(sessionKeyPrefix)
+	store.Options(sessions.Options{
+		MaxAge:   int(24 * time.Hour),
+		HttpOnly: true,
+	})
+
 	return &Manager{
 		store: store,
 	}
