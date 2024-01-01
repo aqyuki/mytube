@@ -36,6 +36,15 @@ func (m *Manager) SaveContent(c echo.Context, content *Content) error {
 	return session.Save(c.Request(), c.Response())
 }
 
+func (m *Manager) DeleteContent(c echo.Context) error {
+	session, err := m.store.Get(c.Request(), sessionKey)
+	if err != nil {
+		return err
+	}
+	session.Options.MaxAge = -1
+	return session.Save(c.Request(), c.Response())
+}
+
 func NewManager(store *redisstore.RedisStore) *Manager {
 	return &Manager{
 		store: store,
