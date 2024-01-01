@@ -12,16 +12,6 @@ services:
       - POSTGRES_DB=mt_dev
     volumes:
       - dev-postgres-data:/var/lib/postgresql/data
-  redis:
-    build:
-      context: docker/redis
-      dockerfile: Dockerfile
-    container_name: mt-dev-redis
-    volumes:
-      - dev-redis-data:/data
-    ports:
-      - "6379:6379"
 
 volumes:
   dev-postgres-data:
-  dev-redis-data:
