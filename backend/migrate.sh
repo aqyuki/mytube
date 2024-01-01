@@ -19,7 +19,8 @@ case "$1" in
     echo "up - run all migrations"
     ;;
   *)
-    echo "invalid command"
+    echo "create <name> - create a new migration"
+    echo "up - run all migrations"
     exit 1
     ;;
 esac
