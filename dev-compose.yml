@@ -1,0 +1,17 @@
+services:
+  postgres:
+    build:
+      context: docker/postgres
+      dockerfile: Dockerfile
+    container_name: mt-dev-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mt_dev
+    volumes:
+      - dev-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  dev-postgres-data:
