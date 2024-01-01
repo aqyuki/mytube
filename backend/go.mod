@@ -8,6 +8,8 @@ require (
 	github.com/rs/xid v1.5.0
 	github.com/sethvargo/go-envconfig v0.9.0
 	github.com/stretchr/testify v1.8.4
+	github.com/uptrace/bun v1.1.16
+	github.com/uptrace/bun/dialect/pgdialect v1.1.16
 	golang.org/x/crypto v0.17.0
 )
 
@@ -18,6 +20,7 @@ require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/k0kubun/pp/v3 v3.2.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/m-mizutani/goerr v0.1.8 // indirect
@@ -25,6 +28,9 @@ require (
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
+	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
+	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
+	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
