@@ -5,8 +5,8 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"log"
 	"log/slog"
+	"os"
 	"os/signal"
 	"syscall"
 
@@ -23,27 +23,19 @@ var (
 )
 
 func main() {
-	flag.Parse()
-
-	ctx, done := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	logger := logging.NewLogger()
-	ctx = logging.WithLogger(ctx, logger)
-
-	defer func() {
-		done()
-	}()
-
-	err := realMain(ctx)
-	done()
-
-	if err != nil {
-		log.Fatal(err)
+	if err := realMain(); err != nil {
+		fmt.Printf("failed: %+v\n", err)
+		os.Exit(1)
 	}
-	logger.Info("successful shutdown")
+	fmt.Printf("server shutdown\n")
+	os.Exit(0)
 }
 
-func realMain(ctx context.Context) error {
-	logger := logging.FromContext(ctx)
+func realMain() error {
+	ctx, done := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer done()
+
+	logger := logging.NewLogger()
 
 	var config database.Config
 	if err := setup.Setup(ctx, &config); err != nil {
@@ -72,4 +64,8 @@ func realMain(ctx context.Context) error {
 	}
 	logger.Info("finished migrate")
 	return nil
+}
+
+func init() {
+	flag.Parse()
 }
