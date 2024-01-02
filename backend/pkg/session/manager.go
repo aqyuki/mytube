@@ -16,6 +16,10 @@ const (
 	redisKeyPrefix = "mt-session:"
 )
 
+var (
+	ErrNotFound = errors.New("session not found")
+)
+
 type Manager struct {
 	conn *redis.Client
 }
@@ -32,7 +36,7 @@ func (m *Manager) GetContent(c echo.Context) (*Content, error) {
 
 	value, err := m.conn.Get(c.Request().Context(), cookie.Value).Result()
 	if err != nil {
-		return nil, err
+		return nil, ErrNotFound
 	}
 
 	content, err := convertToContent([]byte(value))
