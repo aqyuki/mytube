@@ -78,6 +78,7 @@ func (m *Manager) SaveContent(c echo.Context, content *Content) error {
 		Path:     "/",
 		Value:    key,
 		HttpOnly: true,
+		MaxAge:   int(30 * 24 * 60 * 60), // 1 month
 	})
 	return nil
 
