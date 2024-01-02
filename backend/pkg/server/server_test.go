@@ -18,8 +18,12 @@ func TestNew(t *testing.T) {
 		SessionManager: &session.Manager{},
 	}
 
+	cnf := &Config{
+		SessionSecret: "secret",
+	}
+
 	ctx := logging.WithLogger(context.Background(), logging.NewLogger())
-	server := New(ctx, m)
+	server := New(ctx, m, cnf)
 	assert.EqualValues(t, m.AccountService, server.accountService, "account service should be set")
 	assert.EqualValues(t, m.SessionManager, server.sessionManager, "session manager should be set")
 	assert.NotNil(t, server.server, "server should be set")
