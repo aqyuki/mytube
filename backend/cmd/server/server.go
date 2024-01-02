@@ -17,7 +17,6 @@ import (
 	"github.com/aqyuki/mytube/backend/pkg/session"
 	"github.com/aqyuki/mytube/backend/pkg/setup"
 	"github.com/joho/godotenv"
-	"github.com/rbcervilla/redisstore/v9"
 )
 
 var (
@@ -72,15 +71,9 @@ func realMain() error {
 	defer redisConn.Close()
 	logger.Info("redis connection created")
 
-	// create redis store to store session
-	store, err := redisstore.NewRedisStore(ctx, redisConn)
-	if err != nil {
-		return fmt.Errorf("failed create redis store: %w", err)
-	}
-
 	// initialize services
 	accountService := account.NewAccountService(account.NewAccountRepository(dbConn))
-	sessionManager := session.NewManager(store)
+	sessionManager := session.NewManager(redisConn)
 
 	// initialize modules
 	modules := server.Modules{
