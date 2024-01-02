@@ -17,7 +17,7 @@ func NewConn(c *Config) (*sql.DB, error) {
 // NewConnFromEnv creates a new postgres connection from environment variables.
 func NewConnFromEnv(ctx context.Context) (*sql.DB, error) {
 	var c Config
-	if err := setup.Setup(ctx, c); err != nil {
+	if err := setup.Setup(ctx, &c); err != nil {
 		return nil, fmt.Errorf("failed database setup: %w", err)
 	}
 	return NewConn(&c)
