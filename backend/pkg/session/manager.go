@@ -91,14 +91,6 @@ func (m *Manager) DeleteContent(c echo.Context) error {
 		return err
 	}
 
-	c.SetCookie(&http.Cookie{
-		Name:     sessionKey,
-		Path:     "/",
-		Value:    "",
-		MaxAge:   -1,
-		HttpOnly: true,
-	})
-
 	return nil
 }
 
