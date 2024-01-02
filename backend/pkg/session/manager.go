@@ -13,7 +13,7 @@ import (
 
 const (
 	sessionKey     = "mt-session"
-	redisKeyPrefix = "mt-session:"
+	redisKeyPrefix = "mt-session-"
 )
 
 var (
