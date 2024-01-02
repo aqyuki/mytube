@@ -25,11 +25,12 @@ type Server struct {
 
 func New(m *Modules) *Server {
 	var s Server
-	server := echo.New()
-	server.HideBanner = true
-	server.HidePort = true
 
-	s.server = server
+	e := echo.New()
+	e.HideBanner = true
+	e.HidePort = true
+
+	s.server = e
 	m.RegisterServices(&s)
 	return &s
 }
