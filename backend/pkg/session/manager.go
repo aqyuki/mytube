@@ -1,63 +1,128 @@
 package session
 
 import (
+	"crypto/rand"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
-	"time"
+	"net/http"
 
-	"github.com/gorilla/sessions"
 	"github.com/labstack/echo/v4"
-	"github.com/rbcervilla/redisstore/v9"
+	"github.com/redis/go-redis/v9"
 )
 
 const (
-	sessionKey       = "mt-session"
-	sessionKeyPrefix = "mt-session:"
+	sessionKey     = "mt-session"
+	redisKeyPrefix = "mt-session-"
+)
+
+var (
+	ErrNotFound = errors.New("session not found")
 )
 
 type Manager struct {
-	store *redisstore.RedisStore
+	conn *redis.Client
 }
 
 func (m *Manager) GetContent(c echo.Context) (*Content, error) {
-	session, err := m.store.Get(c.Request(), sessionKey)
-	if err != nil {
+	cookie, err := c.Cookie(sessionKey)
+	if errors.Is(err, http.ErrNoCookie) {
+		return &Content{
+			OAuth: false,
+		}, nil
+	} else if err != nil {
 		return nil, err
 	}
 
-	var content Content
-	content.FromMap(session.Values)
-	return &content, nil
+	value, err := m.conn.Get(c.Request().Context(), cookie.Value).Result()
+	if err != nil {
+		return nil, ErrNotFound
+	}
+
+	content, err := convertToContent([]byte(value))
+	if err != nil {
+		return nil, err
+	}
+	return content, nil
 }
 
 func (m *Manager) SaveContent(c echo.Context, content *Content) error {
-	session, err := m.store.Get(c.Request(), sessionKey)
+	cookie, err := c.Cookie(sessionKey)
+	if err != nil && !errors.Is(err, http.ErrNoCookie) {
+		return err
+	}
+
+	var key string
+
+	if errors.Is(err, http.ErrNoCookie) {
+		genKey, err := generateSessionID()
+		if err != nil {
+			return err
+		}
+		key = genKey
+	} else {
+		key = cookie.Value
+	}
+
+	value, err := convertToJSON(content)
 	if err != nil {
 		return err
 	}
-	if content == nil {
-		return errors.New("failed to save session: nil content")
+
+	if err := m.conn.Set(c.Request().Context(), key, value, 0).Err(); err != nil {
+		return err
 	}
-	session.Values = content.ToMap()
-	return session.Save(c.Request(), c.Response())
+
+	c.SetCookie(&http.Cookie{
+		Name:     sessionKey,
+		Path:     "/",
+		Value:    key,
+		HttpOnly: true,
+		MaxAge:   int(30 * 24 * 60 * 60), // 1 month
+	})
+	return nil
+
 }
 
 func (m *Manager) DeleteContent(c echo.Context) error {
-	session, err := m.store.Get(c.Request(), sessionKey)
-	if err != nil {
+	cookie, err := c.Cookie(sessionKey)
+	if err != nil && !errors.Is(err, http.ErrNoCookie) {
+		return err
+	} else if errors.Is(err, http.ErrNoCookie) {
+		return nil
+	}
+
+	if err := m.conn.Del(c.Request().Context(), cookie.Value).Err(); err != nil {
 		return err
 	}
-	session.Options.MaxAge = -1
-	return session.Save(c.Request(), c.Response())
+
+	return nil
 }
 
-func NewManager(store *redisstore.RedisStore) *Manager {
-	store.KeyPrefix(sessionKeyPrefix)
-	store.Options(sessions.Options{
-		MaxAge:   int(24 * time.Hour),
-		HttpOnly: true,
-	})
-
+func NewManager(client *redis.Client) *Manager {
 	return &Manager{
-		store: store,
+		conn: client,
 	}
+}
+
+func convertToJSON(content *Content) ([]byte, error) {
+	return json.Marshal(content)
+}
+
+func convertToContent(data []byte) (*Content, error) {
+	var content Content
+	err := json.Unmarshal(data, &content)
+	if err != nil {
+		return nil, err
+	}
+	return &content, nil
+}
+
+func generateSessionID() (string, error) {
+	randomBytes := make([]byte, 128)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		return "", err
+	}
+	return redisKeyPrefix + base64.URLEncoding.EncodeToString(randomBytes)[:172], nil
 }

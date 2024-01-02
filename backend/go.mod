@@ -10,7 +10,6 @@ require (
 	github.com/labstack/echo-contrib v0.15.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/m-mizutani/clog v0.0.4
-	github.com/rbcervilla/redisstore/v9 v9.0.0
 	github.com/redis/go-redis/v9 v9.3.1
 	github.com/rs/xid v1.5.0
 	github.com/sethvargo/go-envconfig v0.9.0
