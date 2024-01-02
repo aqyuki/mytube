@@ -7,8 +7,13 @@ import (
 	"net/http"
 
 	"github.com/aqyuki/mytube/backend/pkg/account"
-	"github.com/aqyuki/mytube/backend/pkg/session"
+	"github.com/aqyuki/mytube/backend/pkg/logging"
+	mid "github.com/aqyuki/mytube/backend/pkg/middleware"
+	ses "github.com/aqyuki/mytube/backend/pkg/session"
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 // Server provides the API for the backend
@@ -17,18 +22,29 @@ type Server struct {
 	accountService account.Service
 
 	// session store
-	sessionManager *session.Manager
+	sessionManager *ses.Manager
 
 	// server
 	server *echo.Echo
 }
 
-func New(m *Modules) *Server {
+func New(ctx context.Context, m *Modules, cnf *Config) *Server {
 	var s Server
 
 	e := echo.New()
 	e.HideBanner = true
 	e.HidePort = true
+
+	// set middlewares
+	// NOTE: maybe we not required use CORS middlewares
+	e.Use(middleware.Recover())
+
+	e.Use(mid.NewLogger(logging.FromContext(ctx)))
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte(cnf.SessionSecret))))
+	e.Use(mid.NewStoreLogger(logging.FromContext(ctx)))
+
+	// set routing
+	s.setOAuthRouting(e)
 
 	s.server = e
 	m.RegisterServices(&s)
