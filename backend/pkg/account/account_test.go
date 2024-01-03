@@ -18,6 +18,7 @@ func TestNewAccount(t *testing.T) {
 		assert.NotEmpty(t, user.PasswordHash, "NewAccount should return a password hash")
 		assert.NotEmpty(t, user.CreatedAt, "NewAccount should return a created at timestamp")
 		assert.NotEmpty(t, user.UpdatedAt, "NewAccount should return an updated at timestamp")
+		assert.Empty(t, user.DeletedAt, "NewAccount should return an empty deleted at timestamp")
 	}
 }
 
