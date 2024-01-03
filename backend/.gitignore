@@ -1,2 +1,6 @@
+# environment file
 .env.develop
 .env.product
+
+# binaries
+bin/
