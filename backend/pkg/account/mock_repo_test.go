@@ -25,16 +25,19 @@ func (m *MockAccountRepository) FetchByUsername(ctx context.Context, userName st
 	if account, ok := m.m[userName]; ok {
 		return &account, nil
 	}
-	return nil, errors.New("account not found")
+	return nil, NewAccountNotFoundErr(userName)
 }
 
 func (m *MockAccountRepository) Register(ctx context.Context, account *Account) error {
 	if m.ErrMode {
 		return errors.New("error mode")
 	}
-
 	m.mu.Lock()
 	defer m.mu.Unlock()
+
+	if _, ok := m.m[account.Username]; ok {
+		return NewAccountAlreadyExistsErr(account.Username)
+	}
 
 	m.m[account.Username] = *account
 	return nil
