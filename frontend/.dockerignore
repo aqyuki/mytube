@@ -1,5 +1,0 @@
-Dockerfile
-.dockerignore
-README
-node_modules/**
-.next/**
