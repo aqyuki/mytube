@@ -3,7 +3,9 @@ package account
 import (
 	"context"
 	"database/sql"
+	"errors"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 )
@@ -35,28 +37,37 @@ func NewAccountRepository(sqlDB *sql.DB) *AccountRepository {
 func (r *AccountRepository) FetchByUsername(ctx context.Context, userName string) (*Account, error) {
 	var user Account
 	if err := r.db.NewSelect().Model(&user).Where("username = ?", userName).Scan(ctx); err != nil {
-		return nil, err
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, NewAccountNotFoundErr(userName)
+		}
+		return nil, NewInternalDatabaseErr(err)
 	}
 	return &user, nil
 }
 
 func (r *AccountRepository) Register(ctx context.Context, account *Account) error {
 	if _, err := r.db.NewInsert().Model(account).Exec(ctx); err != nil {
-		return err
+		return NewAccountAlreadyExistsErr(account.Username)
 	}
 	return nil
 }
 
 func (r *AccountRepository) Update(ctx context.Context, account *Account) error {
 	if _, err := r.db.NewUpdate().Model(account).Where("id = ?", account.ID).Exec(ctx); err != nil {
-		return err
+		if errors.Is(err, pgx.ErrNoRows) {
+			return NewAccountNotFoundErr(account.Username)
+		}
+		return NewInternalDatabaseErr(err)
 	}
 	return nil
 }
 
 func (r *AccountRepository) Delete(ctx context.Context, account *Account) error {
 	if _, err := r.db.NewDelete().Model(account).Where("id = ?", account.ID).Exec(ctx); err != nil {
-		return err
+		if errors.Is(err, pgx.ErrNoRows) {
+			return NewAccountNotFoundErr(account.Username)
+		}
+		return NewInternalDatabaseErr(err)
 	}
 	return nil
 }

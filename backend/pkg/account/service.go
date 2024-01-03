@@ -2,7 +2,6 @@ package account
 
 import (
 	"context"
-	"errors"
 	"log/slog"
 	"time"
 
@@ -37,15 +36,19 @@ func (s *AccountService) Register(ctx context.Context, username, password string
 	user, err := NewAccount(xid.New().String(), username, password, time.Now(), time.Now())
 	if err != nil {
 		logger.Error("failed to create account", slog.Any("error", err))
-		return nil, err
+		return nil, NewInternalAccountServiceErr(err)
 	}
 
 	ctx, cancel := context.WithDeadline(ctx, time.Now().Add(5*time.Second))
 	defer cancel()
 
 	if err := s.repo.Register(ctx, user); err != nil {
-		logger.Error("failed to register account", slog.Any("error", err))
-		return nil, err
+		if IsAccountAlreadyExistsErr(err) {
+			logger.Error("account already exists", slog.Any("error", err))
+			return nil, err
+		}
+		logger.Error("internal database error", slog.Any("error", err))
+		return nil, NewInternalAccountServiceErr(err)
 	}
 
 	logger.Info("account registered")
@@ -62,12 +65,16 @@ func (s *AccountService) Delete(ctx context.Context, username string) error {
 
 	user, err := s.repo.FetchByUsername(ctx, username)
 	if err != nil {
-		logger.Error("failed to fetch account", slog.Any("error", err))
-		return err
+		if IsAccountNotFoundErr(err) {
+			logger.Error("account not found", slog.Any("error", err))
+			return err
+		}
+		logger.Error("internal database error", slog.Any("error", err))
+		return NewInternalAccountServiceErr(err)
 	}
 	if err := s.repo.Delete(ctx, user); err != nil {
 		logger.Error("failed to delete account", slog.Any("error", err))
-		return err
+		return NewInternalAccountServiceErr(err)
 	}
 
 	logger.Info("account deleted")
@@ -83,12 +90,16 @@ func (s *AccountService) Login(ctx context.Context, username, password string) (
 
 	user, err := s.repo.FetchByUsername(ctx, username)
 	if err != nil {
+		if IsAccountNotFoundErr(err) {
+			logger.Error("account not found", slog.Any("error", err))
+			return nil, NewAccountOAuthErr()
+		}
 		logger.Error("failed to fetch account", slog.Any("error", err))
-		return nil, err
+		return nil, NewInternalAccountServiceErr(err)
 	}
 
 	if user.EqualPassword(password) {
 		return user, nil
 	}
-	return nil, errors.New("failed to login")
+	return nil, NewAccountOAuthErr()
 }
