@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommitTypeAll(chore)"],
+  "packageRules": [
+    {
+      "groupName": "all non-major",
+      "matchPackagePatterns": ["*"],
+      "updateTypes": ["minor", "patch"]
+    }
+  ],
+  "platformCommit": true,
+  "labels": [":arrow_up: dependency", ":robot: renovate"]
+}

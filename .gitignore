@@ -1,0 +1,19 @@
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+
+# environment file
+.env
+
+# binary
+bin/
+
+# Taskfile
+Taskfile.yml

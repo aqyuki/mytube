@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  test:
+    silent: true
+    desc: Run tests
+    cmds:
+      - go test -v --shuffle on ./...
+  coverage:
+    silent: true
+    desc: Run tests with coverage
+    cmds:
+      - go test -v --shuffle on -coverprofile=coverage.out ./...
+      - go tool cover -html=coverage.out
